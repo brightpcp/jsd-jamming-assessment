@@ -1,5 +1,5 @@
 // TODO: Get Client ID from https://developer.spotify.com/dashboard/ and put it here
-const clientId = 'YOUR SPOTIFY CLIENT ID';
+const clientId = 'd4f95ce53d17459abe2a89123960c89b';
 
 const redirectUri = 'http://localhost:3000/';
 const spotifyUrl = `https://accounts.spotify.com/authorize?response_type=token&scope=playlist-modify-public&client_id=${clientId}&redirect_uri=${redirectUri}`;
@@ -45,8 +45,8 @@ const Spotify = {
       });
   },
 
-  async savePlaylist(name, trackIds) {
-    if (Array.isArray(trackIds) && trackIds.length) {
+  async savePlaylist(name, trackUris) {
+    if (Array.isArray(trackUris) && trackUris.length) {
       const createPlaylistUrl = `https://api.spotify.com/v1/me/playlists`;
       const response = await fetch(createPlaylistUrl, {
         method: 'POST',
@@ -54,23 +54,20 @@ const Spotify = {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${accessToken}`,
         },
-        body: JSON.stringify({
-          name: name,
-          public: true,
-        }),
+        body: JSON.stringify({ name: name }),
       });
       const jsonResponse = await response.json();
       const playlistId = jsonResponse.id;
       if (playlistId) {
         const replacePlaylistTracksUrl = `https://api.spotify.com/v1/playlists/${playlistId}/tracks`;
         await fetch(replacePlaylistTracksUrl, {
-          method: 'PUT',
+          method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${accessToken}`,
           },
           body: JSON.stringify({
-            uris: trackIds.map((id) => 'spotify:track:'.concat(id)),
+            uris: trackUris,
           }),
         });
       }

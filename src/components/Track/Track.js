@@ -5,9 +5,9 @@ function Track(props) {
 
 const renderAction = () =>{
   if(props.isRemoval){
-    return <button className="Track-action" OnClick={removeTrack}>-</button>
+    return <button className="Track-action" onClick={removeTrack}>-</button>
   } else {
-    return <button className="Track-action" OnClick={addTrack}>+</button>
+    return <button className="Track-action" onClick={addTrack}>+</button>
   }
 }
 
